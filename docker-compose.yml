@@ -1,0 +1,8 @@
+version: "3"
+services:
+  softduplex:
+    build: .
+    volumes:
+      - ./input/odd:/input/odd
+      - ./input/even:/input/even
+      - ./output:/output

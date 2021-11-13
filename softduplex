@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+set -xeo pipefile
+
+while true; do
+  INPUT_DIR_EVEN_PAGES=/input/even
+  INPUT_FILE_EVEN_PAGES=$(readlink -f $INPUT_DIR_EVEN_PAGES/* | head -1)
+
+  INPUT_DIR_ODD_PAGES=/input/odd
+  INPUT_FILE_ODD_PAGES=$(readlink -f $INPUT_DIR_ODD_PAGES/* | head -1)
+
+  OUTPUT_DIR_MERGED_PAGES=/output
+
+  if [ -n "$INPUT_FILE_EVEN_PAGES"  ] && [ -n "$INPUT_FILE_ODD_PAGES" ]; then
+    OUTPUT_FILE_MERGED=$OUTPUT_DIR_MERGED_PAGES/$(basename $INPUT_FILE_ODD_PAGES .pdf)_merged.pdf
+
+    pdftk A=$INPUT_FILE_ODD_PAGES B=$INPUT_FILE_EVEN_PAGES shuffle A B output $OUTPUT_FILE_MERGED &&
+      rm -v $INPUT_FILE_ODD_PAGES $INPUT_FILE_EVEN_PAGES
+            # or if odd.pdf is in reverse order:
+            # pdftk A=even.pdf B=odd.pdf shuffle A Bend-1 output collated.pdf
+  fi
+  sleep 10
+done
