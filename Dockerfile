@@ -6,8 +6,8 @@ LABEL org.label-schema.vcs-url="https://github.com/frzb/softduplex"
 LABEL org.label-schema.vcs-ref=$VCS_REF
 
 RUN apk update && apk add pdftk &&\
-  addgroup -S softduplex && adduser -S softduplex -u 1000 -G softduplex 
+  addgroup -S softduplex && adduser -S softduplex -u 1000 -G softduplex
 
 USER softduplex
 COPY softduplex /bin/
-CMD ["sh","./bin/softduplex"]
+CMD ["sh","/bin/softduplex"]
