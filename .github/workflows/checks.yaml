@@ -8,8 +8,8 @@ env:
   GO_VERSION: 1.17
 
 jobs:
-  lint:
-    name: lint
+  lint_and_integration:
+    name: linting and integration test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -23,8 +23,8 @@ jobs:
            sudo chmod +x /usr/local/bin/docker-compose
       - name: Install integration test dependencies
         run: |
-          apt update
-          apt install -y python3-pdfminer diffutils
+          sudo apt update
+          sudo apt install -y python3-pdfminer diffutils
       - name: Start softduplex container
         run: docker-compose up -d
       - name: Merge example files
