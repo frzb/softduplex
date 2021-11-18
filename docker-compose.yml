@@ -3,6 +3,5 @@ services:
   softduplex:
     build: .
     volumes:
-      - ./input/odd:/input/odd
-      - ./input/even:/input/even
+      - ./input:/input
       - ./output:/output

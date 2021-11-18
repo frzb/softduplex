@@ -1,5 +1,5 @@
-#!/usr/bin/env sh
-set -eo pipefail
+#!/usr/bin/sh
+set -e
 
 while true; do
   INPUT_DIR_EVEN_PAGES=/input/even
@@ -30,5 +30,5 @@ while true; do
             # or if odd.pdf is in reverse order:
             # pdftk A=even.pdf B=odd.pdf shuffle A Bend-1 output collated.pdf
   fi
-  sleep 10
+  sleep 2
 done

@@ -1,0 +1,39 @@
+---
+name: checks
+on: [push, workflow_dispatch]
+
+env:
+  ACT_OWNER: ${{ github.repository_owner }}
+  ACT_REPOSITORY: ${{ github.repository }}
+  GO_VERSION: 1.17
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+      - name: Install docker-compose
+        run: |
+          docker-compose -v ||
+           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+           sudo chmod +x /usr/local/bin/docker-compose
+      - name: Install integration test dependencies
+        run: |
+          apt update
+          apt install -y python3-pdfminer diffutils
+      - name: Start softduplex container
+        run: docker-compose up -d
+      - name: Merge example files
+        run: |
+          docker-compose ps -a
+          cp -v ./test/input/even.pdf ./input/even/
+          cp -v ./test/input/odd.pdf ./input/odd/
+      - name: Verify merged page order
+        run: diff -y  <(pdf2txt output/odd_merged.pdf) test/reference_output
+
+
+
