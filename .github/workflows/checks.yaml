@@ -36,7 +36,7 @@ jobs:
           docker-compose logs
           tree
           ls -la
-          getent id runner
+          getent passwd runner
           getent group docker
       - name: Verify merged page order
         run: |
