@@ -33,7 +33,16 @@ jobs:
           cp -v ./test/input/even.pdf ./input/even/
           cp -v ./test/input/odd.pdf ./input/odd/
       - name: Verify merged page order
-        run: diff -y  <(pdf2txt output/odd_merged.pdf) test/reference_output
-
-
-
+        run: |
+          timeout=10
+          i=0
+          while ! ls output/odd_merged.pdf; do
+            echo "Waiting for merged pdf document to be created..."
+            if [ $i -ge $timeout ]; then
+              echo "Timeout reached"
+              exit 1
+            fi
+            i=$((i+1))
+            sleep 1
+          done
+          diff -y  <(pdf2txt output/odd_merged.pdf) test/reference_output
