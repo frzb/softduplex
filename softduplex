@@ -1,21 +1,26 @@
 #!/usr/bin/sh
 set -e
 
+INPUT_DIR_EVEN_PAGES=/input/even
+INPUT_DIR_ODD_PAGES=/input/odd
+
+echo "Softduplex has started and is watching the directories:"
+echo "$INPUT_DIR_EVEN_PAGES"
+echo "$INPUT_DIR_ODD_PAGES"
+
 while true; do
-  INPUT_DIR_EVEN_PAGES=/input/even
 
   if ls $INPUT_DIR_EVEN_PAGES/* 2> /dev/null; then
     INPUT_FILE_EVEN_PAGES=$(readlink -f "$INPUT_DIR_EVEN_PAGES"/* | head -1)
   else
-    echo "$INPUT_DIR_EVEN_PAGES is still empty"
+    [ "$VERBOSE" = true ] && echo "$INPUT_DIR_EVEN_PAGES is still empty"
   fi
 
-  INPUT_DIR_ODD_PAGES=/input/odd
 
   if ls $INPUT_DIR_ODD_PAGES/* 2> /dev/null; then
     INPUT_FILE_ODD_PAGES=$(readlink -f $INPUT_DIR_ODD_PAGES/* | head -1)
   else
-    echo "$INPUT_DIR_ODD_PAGES is still empty"
+    [ "$VERBOSE" = true ] && echo "$INPUT_DIR_ODD_PAGES is still empty"
   fi
 
   OUTPUT_DIR_MERGED_PAGES=/output
