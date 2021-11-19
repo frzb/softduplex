@@ -32,12 +32,13 @@ jobs:
           docker-compose ps -a
           cp -v ./test/input/even.pdf ./input/even/
           cp -v ./test/input/odd.pdf ./input/odd/
+          sleep 30
           docker-compose logs
           tree
           ls -la 
       - name: Verify merged page order
         run: |
-          timeout=10
+          timeout=20
           i=0
           while ! ls output/odd_merged.pdf; do
             echo "Waiting for merged pdf document to be created..."
