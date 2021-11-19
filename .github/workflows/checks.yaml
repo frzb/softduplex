@@ -32,6 +32,9 @@ jobs:
           docker-compose ps -a
           cp -v ./test/input/even.pdf ./input/even/
           cp -v ./test/input/odd.pdf ./input/odd/
+          docker-compose logs
+          tree
+          ls -la 
       - name: Verify merged page order
         run: |
           timeout=10
