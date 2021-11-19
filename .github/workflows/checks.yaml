@@ -35,7 +35,9 @@ jobs:
           sleep 30
           docker-compose logs
           tree
-          ls -la 
+          ls -la
+          getent id runner
+          getent group docker
       - name: Verify merged page order
         run: |
           timeout=20
