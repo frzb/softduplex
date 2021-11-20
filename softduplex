@@ -3,6 +3,8 @@ set -e
 
 INPUT_DIR_EVEN_PAGES=/input/even
 INPUT_DIR_ODD_PAGES=/input/odd
+OUTPUT_TEMP_DIR=/tmp/softduplex
+OUTPUT_DIR_MERGED_PAGES=/output
 
 echo "Softduplex has started and is watching the directories:"
 echo "$INPUT_DIR_EVEN_PAGES"
@@ -23,14 +25,19 @@ while true; do
     [ "$VERBOSE" = true ] && echo "$INPUT_DIR_ODD_PAGES is still empty"
   fi
 
-  OUTPUT_DIR_MERGED_PAGES=/output
-
+# We have to write the output file at first to a temporary directory else
+# other processes which want to access the newly created PDF file will get confused when they
+# want to access the file which is still written.
   if [ -n "$INPUT_FILE_EVEN_PAGES"  ] && [ -n "$INPUT_FILE_ODD_PAGES" ]; then
-    OUTPUT_FILE_MERGED=$OUTPUT_DIR_MERGED_PAGES/$(basename $INPUT_FILE_ODD_PAGES .pdf)_merged.pdf
-
-    pdftk A=$INPUT_FILE_ODD_PAGES B=$INPUT_FILE_EVEN_PAGES shuffle A B output $OUTPUT_FILE_MERGED &&
+    OUTPUT_FILE_MERGED=$OUTPUT_TEMP_DIR/$(basename $INPUT_FILE_ODD_PAGES .pdf)_merged.pdf
+    if [ "$REVERSE" = true ]: then
+      pdftk A=$INPUT_FILE_ODD_PAGES B=$INPUT_FILE_EVEN_PAGES shuffle A Bend-1 output $OUTPUT_FILE_MERGED
+    else
+      pdftk A=$INPUT_FILE_ODD_PAGES B=$INPUT_FILE_EVEN_PAGES shuffle A B output $OUTPUT_FILE_MERGED
+    fi
       echo "Created merged PDF: $OUTPUT_FILE_MERGED"
       rm -v $INPUT_FILE_ODD_PAGES $INPUT_FILE_EVEN_PAGES &&
+      mv -v $OUTPUT_FILE_MERGED $OUTPUT_DIR_MERGED_PAGES
       unset INPUT_FILE_ODD_PAGES INPUT_FILE_EVEN_PAGES
             # or if odd.pdf is in reverse order:
             # pdftk A=even.pdf B=odd.pdf shuffle A Bend-1 output collated.pdf

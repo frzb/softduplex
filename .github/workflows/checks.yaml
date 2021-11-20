@@ -1,15 +1,10 @@
 ---
-name: checks
+name: Linting and Tests
 on: [push, workflow_dispatch]
-
-env:
-  ACT_OWNER: ${{ github.repository_owner }}
-  ACT_REPOSITORY: ${{ github.repository }}
-  GO_VERSION: 1.17
 
 jobs:
   lint_and_integration:
-    name: linting and integration test
+    name: linting and system test
     runs-on: ubuntu-latest
     steps:
       - name: Write current UID to environment
