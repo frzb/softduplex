@@ -1,13 +1,11 @@
 version: "3"
 services:
   softduplex:
-    user: ${UID}
-    build: .
     environment:
       # Set to "true" to enable verbositiy
       VERBOSE: "false"
-      UID: 1000
-      GID: 1000
+    user: "${UID}"
+    build: .
     logging:
       driver: "json-file"
       options:

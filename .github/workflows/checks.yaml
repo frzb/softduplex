@@ -25,6 +25,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-pdfminer diffutils
+      - name: Export UID environment variable
+        run: export UID
       - name: Start softduplex container
         run: docker-compose up -d
       - name: Merge example files
@@ -33,11 +35,6 @@ jobs:
           cp -v ./test/input/even.pdf ./input/even/
           cp -v ./test/input/odd.pdf ./input/odd/
           sleep 30
-          docker-compose logs
-          tree
-          ls -la
-          getent passwd runner
-          getent group docker
       - name: Verify merged page order
         run: |
           timeout=20
