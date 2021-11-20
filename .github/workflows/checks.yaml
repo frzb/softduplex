@@ -34,6 +34,7 @@ jobs:
       - name: Merge example files
         run: |
           docker-compose ps -a
+          docker-compose config
           cp -v ./test/input/even.pdf ./input/even/
           cp -v ./test/input/odd.pdf ./input/odd/
           sleep 30
