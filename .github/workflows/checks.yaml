@@ -27,8 +27,8 @@ jobs:
           sudo apt install -y python3-pdfminer diffutils
       - name: Export UID environment variable
         run: |
-        export UID
-        env
+          export UID
+          env
       - name: Start softduplex container
         run: docker-compose up -d
       - name: Merge example files
