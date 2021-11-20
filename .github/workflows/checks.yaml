@@ -35,6 +35,8 @@ jobs:
           cp -v ./test/input/even.pdf ./input/even/
           cp -v ./test/input/odd.pdf ./input/odd/
           sleep 30
+          docker-compose logs
+          ls -la 
       - name: Verify merged page order
         run: |
           timeout=20

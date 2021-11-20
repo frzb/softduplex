@@ -1,6 +1,12 @@
 #!/usr/bin/sh
 set -e
 
+env
+
+ls -la
+
+whoami 
+
 INPUT_DIR_EVEN_PAGES=/input/even
 INPUT_DIR_ODD_PAGES=/input/odd
 
