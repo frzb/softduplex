@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Write current UID to environment
-        run: echo $UID >> $GITHUB_ENV
+        run: echo "UID=$UID" >> $GITHUB_ENV
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run ShellCheck
