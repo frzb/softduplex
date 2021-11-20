@@ -50,6 +50,7 @@ jobs:
           ls -la /home/runner/work/softduplex/softduplex/output 
           sudo docker ps -a
           docker-compose logs
+          docker logs softduplex_softduplex_1
           docker exec softduplex_softduplex_1 ls -la /output
           timeout=20
           i=0
