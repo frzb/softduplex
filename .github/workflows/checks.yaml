@@ -12,6 +12,8 @@ jobs:
     name: linting and integration test
     runs-on: ubuntu-latest
     steps:
+      - name: Write current UID to environment
+        run: echo $UID >> $GITHUB_ENV
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run ShellCheck
@@ -25,14 +27,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-pdfminer diffutils
-      - name: Export UID environment variable
-        run: |
-          export UID
-          env
       - name: Start softduplex container
         run: |
-          export UID
-          env | grep UID
           docker-compose up -d
       - name: Merge example files
         run: |
