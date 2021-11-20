@@ -30,7 +30,10 @@ jobs:
           export UID
           env
       - name: Start softduplex container
-        run: docker-compose up -d
+        run: |
+          export UID
+          env | grep UID
+          docker-compose up -d
       - name: Merge example files
         run: |
           export UID
