@@ -36,22 +36,10 @@ jobs:
           docker-compose up -d
       - name: Merge example files
         run: |
-          export UID
-          env | grep UID
-          docker-compose ps -a
-          docker-compose config
           cp -v ./test/input/even.pdf ./input/even/
           cp -v ./test/input/odd.pdf ./input/odd/
-          sleep 30
-          docker-compose logs
-          ls -la 
       - name: Verify merged page order
         run: |
-          ls -la /home/runner/work/softduplex/softduplex/output 
-          sudo docker ps -a
-          docker-compose logs
-          docker logs softduplex_softduplex_1
-          docker exec softduplex_softduplex_1 ls -la /output
           timeout=20
           i=0
           while ! ls output/odd_merged.pdf; do

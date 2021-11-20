@@ -1,16 +1,5 @@
 #!/usr/bin/sh
 set -e
-set -x
-
-env
-
-ls -la
-
-id
-
-touch /output/testfile
-
-echo $UID
 
 INPUT_DIR_EVEN_PAGES=/input/even
 INPUT_DIR_ODD_PAGES=/input/odd
