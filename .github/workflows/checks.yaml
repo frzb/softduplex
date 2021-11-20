@@ -33,6 +33,8 @@ jobs:
         run: docker-compose up -d
       - name: Merge example files
         run: |
+          export UID
+          env | grep UID
           docker-compose ps -a
           docker-compose config
           cp -v ./test/input/even.pdf ./input/even/
