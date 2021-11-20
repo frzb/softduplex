@@ -5,9 +5,11 @@ env
 
 ls -la
 
-whoami 
+whoami
 
-echo $$UID
+touch /output/testfile
+
+echo $UID
 
 INPUT_DIR_EVEN_PAGES=/input/even
 INPUT_DIR_ODD_PAGES=/input/odd
