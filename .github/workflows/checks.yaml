@@ -31,6 +31,7 @@ jobs:
           cp -v ./test/input/odd.pdf ./input/odd/
       - name: Verify merged page order
         run: |
+          docker-compose logs
           timeout=20
           i=0
           while ! ls output/odd_merged.pdf; do

@@ -1,5 +1,10 @@
 #!/usr/bin/sh
 set -e
+set -x
+
+ls -la 
+
+id
 
 INPUT_DIR_EVEN_PAGES=/input/even
 INPUT_DIR_ODD_PAGES=/input/odd
