@@ -48,7 +48,7 @@ jobs:
       - name: Verify merged page order
         run: |
           ls -la /home/runner/work/softduplex/softduplex/output 
-          sudo docker exec -it softduplex_softduplex_1 ls -la /output
+          sudo docker exec softduplex_softduplex_1 ls -la /output
           timeout=20
           i=0
           while ! ls output/odd_merged.pdf; do
