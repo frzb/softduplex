@@ -6,7 +6,7 @@ env
 
 ls -la
 
-whoami
+id
 
 touch /output/testfile
 
