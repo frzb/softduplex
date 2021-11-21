@@ -42,7 +42,7 @@ Adapt the settings in the `.env` according to your needs.
 
 #### `UID`
 
-The `UID` has to to align with user that start the Softduplex Docker container to have the proper file permission for the `./input` and `./output` directories inside the container.
+The `UID` has to to align with user that starts the Softduplex Docker container to have the proper file permission for the `./input` and `./output` directories inside the container.
 
 ### `REVERSE`
 
