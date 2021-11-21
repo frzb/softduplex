@@ -41,3 +41,5 @@ while true; do
   fi
   sleep 2
 done
+
+rm -rf $OUTPUT_TEMP_DIR
