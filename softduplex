@@ -1,6 +1,8 @@
 #!/usr/bin/sh
 set -e
 
+env
+
 INPUT_DIR_EVEN_PAGES=/input/even
 INPUT_DIR_ODD_PAGES=/input/odd
 OUTPUT_TEMP_DIR=$(mktemp -d)

@@ -4,6 +4,7 @@ services:
     environment:
       # Set to "true" to enable verbositiy
       VERBOSE: "false"
+      REVERSE: "${REVERSE}"
     user: "${UID}"
     build: .
     logging:

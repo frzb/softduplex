@@ -4,8 +4,18 @@ on: [push, workflow_dispatch]
 
 jobs:
   lint_and_integration:
-    name: linting and system test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [normal, reverse]
+        include:
+        - config: normal
+          env:
+            REVERSE: false
+        
+        - config: reverse 
+          env:
+            REVERSE: true
     steps:
       - name: Write current UID to environment
         run: echo "UID=$UID" >> $GITHUB_ENV
@@ -25,12 +35,15 @@ jobs:
           sudo apt update
           sudo apt install -y python3-pdfminer diffutils
       - name: Start softduplex container
+        env: ${{matrix.env}}
         run: |
+          env 
+          docker-compose config
           docker-compose up -d
       - name: Merge example files
         run: |
-          cp -v ./test/input/even.pdf ./input/even/
           cp -v ./test/input/odd.pdf ./input/odd/
+          cp -v ./test/input/even.pdf ./input/even/
       - name: Verify merged page order
         run: |
           docker-compose logs
@@ -46,3 +59,4 @@ jobs:
             sleep 1
           done
           diff -y  <(pdf2txt output/odd_merged.pdf) test/reference_output
+          rm output/odd_merged.pdf
