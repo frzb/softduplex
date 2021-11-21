@@ -43,7 +43,7 @@ jobs:
       - name: Merge example files
         run: |
           cp -v ./test/input/odd.pdf ./input/odd/
-          cp -v ./test/input/even.pdf ./input/even/
+          cp -v ./test/input/even_${{matrix.config}}.pdf ./input/even/
       - name: Verify merged page order
         run: |
           docker-compose logs
