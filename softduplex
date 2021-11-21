@@ -1,8 +1,12 @@
 #!/usr/bin/sh
 set -e
 
+env
+
 INPUT_DIR_EVEN_PAGES=/input/even
 INPUT_DIR_ODD_PAGES=/input/odd
+OUTPUT_TEMP_DIR=$(mktemp -d)
+OUTPUT_DIR_MERGED_PAGES=/output
 
 echo "Softduplex has started and is watching the directories:"
 echo "$INPUT_DIR_EVEN_PAGES"
@@ -10,30 +14,34 @@ echo "$INPUT_DIR_ODD_PAGES"
 
 while true; do
 
-  if ls $INPUT_DIR_EVEN_PAGES/* 2> /dev/null; then
+  if ls $INPUT_DIR_EVEN_PAGES/* 2>/dev/null; then
     INPUT_FILE_EVEN_PAGES=$(readlink -f "$INPUT_DIR_EVEN_PAGES"/* | head -1)
   else
     [ "$VERBOSE" = true ] && echo "$INPUT_DIR_EVEN_PAGES is still empty"
   fi
 
-
-  if ls $INPUT_DIR_ODD_PAGES/* 2> /dev/null; then
+  if ls $INPUT_DIR_ODD_PAGES/* 2>/dev/null; then
     INPUT_FILE_ODD_PAGES=$(readlink -f $INPUT_DIR_ODD_PAGES/* | head -1)
   else
     [ "$VERBOSE" = true ] && echo "$INPUT_DIR_ODD_PAGES is still empty"
   fi
 
-  OUTPUT_DIR_MERGED_PAGES=/output
-
-  if [ -n "$INPUT_FILE_EVEN_PAGES"  ] && [ -n "$INPUT_FILE_ODD_PAGES" ]; then
-    OUTPUT_FILE_MERGED=$OUTPUT_DIR_MERGED_PAGES/$(basename $INPUT_FILE_ODD_PAGES .pdf)_merged.pdf
-
-    pdftk A=$INPUT_FILE_ODD_PAGES B=$INPUT_FILE_EVEN_PAGES shuffle A B output $OUTPUT_FILE_MERGED &&
-      echo "Created merged PDF: $OUTPUT_FILE_MERGED"
-      rm -v $INPUT_FILE_ODD_PAGES $INPUT_FILE_EVEN_PAGES &&
-      unset INPUT_FILE_ODD_PAGES INPUT_FILE_EVEN_PAGES
-            # or if odd.pdf is in reverse order:
-            # pdftk A=even.pdf B=odd.pdf shuffle A Bend-1 output collated.pdf
+  # We have to write the output file at first to a temporary directory else
+  # other processes which want to access the newly created PDF file will get confused when they
+  # want to access the file which is still written.
+  if [ -n "$INPUT_FILE_EVEN_PAGES" ] && [ -n "$INPUT_FILE_ODD_PAGES" ]; then
+    OUTPUT_FILE_MERGED=$OUTPUT_TEMP_DIR/$(basename $INPUT_FILE_ODD_PAGES .pdf)_merged.pdf
+    if [ "$REVERSE" = true ]; then
+      pdftk A=$INPUT_FILE_ODD_PAGES B=$INPUT_FILE_EVEN_PAGES shuffle A Bend-1 output $OUTPUT_FILE_MERGED
+    else
+      pdftk A=$INPUT_FILE_ODD_PAGES B=$INPUT_FILE_EVEN_PAGES shuffle A B output $OUTPUT_FILE_MERGED
+    fi
+    echo "Created merged PDF: $OUTPUT_FILE_MERGED"
+    rm -v $INPUT_FILE_ODD_PAGES $INPUT_FILE_EVEN_PAGES \
+      && mv -v $OUTPUT_FILE_MERGED $OUTPUT_DIR_MERGED_PAGES
+    unset INPUT_FILE_ODD_PAGES INPUT_FILE_EVEN_PAGES
   fi
   sleep 2
 done
+
+rm -rf $OUTPUT_TEMP_DIR
