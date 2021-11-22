@@ -1,0 +1,43 @@
+version: "3.4"
+services:
+  broker:
+    image: redis:6.0
+    restart: unless-stopped
+
+  webserver:
+    image: jonaswinkler/paperless-ng:latest
+    restart: unless-stopped
+    depends_on:
+      - broker
+    ports:
+      - 80:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - data:/usr/src/paperless/data
+      - media:/usr/src/paperless/media
+      - /srv/scanner/paperless:/usr/src/paperless/consume
+    env_file: docker-compose.env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+
+  samba:
+    image: elswork/samba
+    environment:
+      TZ: 'Europe/Berlin'
+    ports:
+      - "139:139"
+      - "445:445"
+    restart: unless-stopped
+    volumes:
+      - /srv/scanner/paperless:/share/scanner/paperless
+      - /srv/scanner/softduplex_odd:/share/scanner/softduplex_odd
+      - /srv/scanner/softduplex_even:/share/scanner/softduplex_even
+    command: '-u "1000:1000:scanner:scanner:scanner" -s "Paperless:/share/scanner/paperless:rw:scanner" -s "Paperless_Frontpages:/share/scanner/softduplex_odd:rw:scanner" -s "Paperless_Backpages:/share/scanner/softduplex_even:rw:scanner"'
+
+volumes:
+  data:
+  media:
