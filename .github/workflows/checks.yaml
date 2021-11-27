@@ -48,8 +48,10 @@ jobs:
         run: |
           cp -v ./test/input/odd.pdf ./input/odd/
           touch ./input/even/even_${{matrix.config}}.pdf
-          sleep 1
+          file ./input/even/even_${{matrix.config}}.pdf
+          sleep 10
           cp -v ./test/input/even_${{matrix.config}}.pdf ./input/even/
+          file ./input/even/even_${{matrix.config}}.pdf
       - name: Verify merged page order
         run: |
           docker-compose logs
