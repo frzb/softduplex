@@ -12,8 +12,7 @@ jobs:
         - config: normal
           env:
             REVERSE: false
-        
-        - config: reverse 
+        - config: reverse
           env:
             REVERSE: true
     steps:
@@ -37,12 +36,19 @@ jobs:
       - name: Start softduplex container
         env: ${{matrix.env}}
         run: |
-          env 
+          env
           docker-compose config
           docker-compose up -d
+      # Write of the PDF documents by the scanner is not atomic.
+      # At first an empty file is created which is filled than with content.
+      # The creation of an empty file confuses following processes using this file.
+      # To simulate this we first touch a file and then after a while put the full
+      # pdf file in place.
       - name: Merge example files
         run: |
           cp -v ./test/input/odd.pdf ./input/odd/
+          touch ./input/even/even_${{matrix.config}}.pdf
+          sleep 1
           cp -v ./test/input/even_${{matrix.config}}.pdf ./input/even/
       - name: Verify merged page order
         run: |
