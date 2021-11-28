@@ -18,8 +18,12 @@ echo "Softduplex has started and is watching the directories:"
 echo "$INPUT_DIR_EVEN_PAGES"
 echo "$INPUT_DIR_ODD_PAGES"
 
-wait_for_pdf_file()
-{
+# Depending on the implementation the creation of a PDF document file is often not an atomic operation.
+# At first an empty file is created in the file system.
+# Which is then filled with actual file content.
+# We have to cope with this by waiting until the file is identified as proper PDF
+# document.
+wait_for_pdf_file() {
   path=$1
 
   while ! file $path | grep 'PDF document'; do
