@@ -16,6 +16,19 @@ echo "Softduplex has started and is watching the directories:"
 echo "$INPUT_DIR_EVEN_PAGES"
 echo "$INPUT_DIR_ODD_PAGES"
 
+# Depending on the implementation the creation of a PDF document file is often not an atomic operation.
+# At first an empty file is created in the file system.
+# Which is then filled with actual file content.
+# We have to cope with this by waiting until the file is identified as proper PDF
+# document.
+wait_for_pdf_file() {
+  path=$1
+
+  while ! file $path | grep 'PDF document'; do
+    sleep 1
+  done
+}
+
 while true; do
 
   if ls $INPUT_DIR_EVEN_PAGES/* 2>/dev/null; then
@@ -35,6 +48,10 @@ while true; do
   # want to access the file which is still written.
   if [ -n "$INPUT_FILE_EVEN_PAGES" ] && [ -n "$INPUT_FILE_ODD_PAGES" ]; then
     OUTPUT_FILE_MERGED=$OUTPUT_TEMP_DIR/$(basename $INPUT_FILE_ODD_PAGES .pdf)_merged.pdf
+
+    wait_for_pdf_file $INPUT_FILE_ODD_PAGES
+    wait_for_pdf_file $INPUT_FILE_EVEN_PAGES
+
     if [ "$REVERSE" = true ]; then
       pdftk A=$INPUT_FILE_ODD_PAGES B=$INPUT_FILE_EVEN_PAGES shuffle A Bend-1 output $OUTPUT_FILE_MERGED
     else
