@@ -1,7 +1,5 @@
 #!/usr/bin/sh
 set -e
-set -x
-env
 
 # Copyright (C) 2021 Gunter Miegel <gunter.miegel@rgsqd.de>
 #
