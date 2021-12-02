@@ -32,7 +32,7 @@ jobs:
       - name: Install integration test dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pdfminer diffutils
+          sudo apt install -y python3-pdfminer diffutils pv
       - name: Start softduplex container
         env: ${{matrix.env}}
         run: |
@@ -50,7 +50,8 @@ jobs:
           touch ./input/even/even_${{matrix.config}}.pdf
           file ./input/even/even_${{matrix.config}}.pdf
           sleep 10
-          cp -v ./test/input/even_${{matrix.config}}.pdf ./input/even/
+          #cp -v ./test/input/even_${{matrix.config}}.pdf ./input/even/
+          dd if=./test/input/even_${{matrix.config}}.pdf | pv --rate-limit 1 | dd of=./input/even/even_${{matrix.config}}.pdf 
           file ./input/even/even_${{matrix.config}}.pdf
       - name: Verify merged page order
         run: |
