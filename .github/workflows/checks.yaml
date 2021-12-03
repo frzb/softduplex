@@ -45,7 +45,7 @@ jobs:
       # To simulate this we first touch a file and then after a while put the full
       # pdf file in place.
       - name: Merge example files
-        run: ./test/merged_example_files ${{matrix.config}}
+        run: ./test/merge_example_files ${{matrix.config}}
       - name: Verify merged page order
         run: |
           docker-compose logs
