@@ -25,10 +25,10 @@ echo "$INPUT_DIR_ODD_PAGES"
 wait_for_pdf_file() {
   path=$1
 
-  #while ! tail -1 $path | grep '%%EOF'; do
-  #  sleep 1
-  #done
-  
+  while ! tail -1 $path | grep '%%EOF'; do
+    sleep 1
+  done
+
   while ! file $path | grep 'PDF document'; do
     sleep 1
   done
