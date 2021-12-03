@@ -57,7 +57,7 @@ jobs:
           segmentsize=$(($filesize / 2))
           postion=0
           while [ "$postion" -le "1" ]; do
-            dd if="$file" skip="$postion" bs="$segmentsize" count=1 >> "$destination" 
+            dd if="$source" skip="$postion" bs="$segmentsize" count=1 >> "$destination" 
             (( postion++ ))
             sleep 5
           done
