@@ -49,9 +49,19 @@ jobs:
           cp -v ./test/input/odd.pdf ./input/odd/
           touch ./input/even/even_${{matrix.config}}.pdf
           file ./input/even/even_${{matrix.config}}.pdf
-          sleep 10
-          #cp -v ./test/input/even_${{matrix.config}}.pdf ./input/even/
-          dd if=./test/input/even_${{matrix.config}}.pdf | pv --rate-limit 1 | dd of=./input/even/even_${{matrix.config}}.pdf 
+          sleep 5
+          set -x
+          source=./test/input/even_${{matrix.config}}.pdf 
+          destination=./input/even/even_${{matrix.config}}.pdf
+          filesize=$(stat --format %s $source)
+          segmentsize=$(($filesize / 2))
+          postion=0
+          while [ "$postion" -le "1" ]; do
+            dd if="$file" skip="$postion" bs="$segmentsize" count=1 >> "$destination" 
+            (( postion++ ))
+            sleep 5
+          done
+          set +x
           file ./input/even/even_${{matrix.config}}.pdf
       - name: Verify merged page order
         run: |
