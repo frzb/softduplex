@@ -45,24 +45,7 @@ jobs:
       # To simulate this we first touch a file and then after a while put the full
       # pdf file in place.
       - name: Merge example files
-        run: |
-          cp -v ./test/input/odd.pdf ./input/odd/
-          touch ./input/even/even_${{matrix.config}}.pdf
-          file ./input/even/even_${{matrix.config}}.pdf
-          sleep 5
-          set -x
-          source=./test/input/even_${{matrix.config}}.pdf 
-          destination=./input/even/even_${{matrix.config}}.pdf
-          filesize=$(stat --format %s $source)
-          segmentsize=$(($filesize / 2))
-          postion=0
-          while ! [ "$postion" -ge "1" ]; do
-            dd if="$source" skip="$postion" bs="$segmentsize" count=1 >> "$destination" 
-            (( postion++ ))
-            sleep 5
-          done
-          set +x
-          file ./input/even/even_${{matrix.config}}.pdf
+        run: ./test/merged_example_files ${{matrix.config}}
       - name: Verify merged page order
         run: |
           docker-compose logs
