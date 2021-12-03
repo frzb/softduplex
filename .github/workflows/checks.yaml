@@ -32,7 +32,7 @@ jobs:
       - name: Install integration test dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pdfminer diffutils
+          sudo apt install -y python3-pdfminer diffutils pv
       - name: Start softduplex container
         env: ${{matrix.env}}
         run: |
@@ -45,13 +45,7 @@ jobs:
       # To simulate this we first touch a file and then after a while put the full
       # pdf file in place.
       - name: Merge example files
-        run: |
-          cp -v ./test/input/odd.pdf ./input/odd/
-          touch ./input/even/even_${{matrix.config}}.pdf
-          file ./input/even/even_${{matrix.config}}.pdf
-          sleep 10
-          cp -v ./test/input/even_${{matrix.config}}.pdf ./input/even/
-          file ./input/even/even_${{matrix.config}}.pdf
+        run: ./test/merge_example_files ${{matrix.config}}
       - name: Verify merged page order
         run: |
           docker-compose logs

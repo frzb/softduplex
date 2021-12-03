@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Write of the PDF documents by the scanner is not atomic.
+# At first an empty file is created which is filled than with content.
+# The creation of an empty file confuses following processes using this file.
+# To simulate this we first touch a file and then write segments of the file with
+# some delay until the whole file is written.
+
+matrix_config=$1
+
+cp -v ./test/input/odd.pdf ./input/odd/
+
+touch ./input/even/even_"$matrix_config".pdf
+file ./input/even/even_"$matrix_config".pdf
+
+sleep 5
+
+source=./test/input/even_"$matrix_config".pdf
+destination=./input/even/even_"$matrix_config".pdf
+filesize=$(stat --format %s $source)
+segmentsize=$(($filesize / 2))
+postion=0
+
+while [ "$postion" -le "1" ]; do
+  dd if="$source" skip="$postion" bs="$segmentsize" count=1 >>"$destination"
+  ((postion++))
+  sleep 5
+done

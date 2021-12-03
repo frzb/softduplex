@@ -21,8 +21,13 @@ echo "$INPUT_DIR_ODD_PAGES"
 # Which is then filled with actual file content.
 # We have to cope with this by waiting until the file is identified as proper PDF
 # document.
+# For that we watch at end of the file with tail  and inspect the header with the file command.
 wait_for_pdf_file() {
   path=$1
+
+  while ! tail -1 $path | grep '%%EOF'; do
+    sleep 1
+  done
 
   while ! file $path | grep 'PDF document'; do
     sleep 1
