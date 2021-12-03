@@ -3,7 +3,7 @@
 # Write of the PDF documents by the scanner is not atomic.
 # At first an empty file is created which is filled than with content.
 # The creation of an empty file confuses following processes using this file.
-# To simulate this we first touch a file and then write segments of the file with 
+# To simulate this we first touch a file and then write segments of the file with
 # some delay until the whole file is written.
 
 matrix_config=$1
@@ -23,6 +23,6 @@ while [ "$postion" -le "1" ]; do
   ((postion++))
   sleep 5
 done
-file ./input/even/even_"$matrix_config".pdf
-ls -la ./input/even/even_"$matrix_config".pdf
+file $destination
+ls -la $destination
 set +x
